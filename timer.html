@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <h1>Time Elapsed Calculator</h1>
+  <label for="startDateTime">Start Date and Time:</label>
+  <input type="datetime-local" id="startDateTime">
+  <input type="checkbox" id="useSystemStart" onchange="handleStartCheckboxChange()"> Use System Time
+
+  <label for="endDateTime">End Date and Time:</label>
+  <input type="datetime-local" id="endDateTime">
+  <input type="checkbox" id="useSystemEnd" onchange="handleEndCheckboxChange()"> Use System Time
+
+  <button onclick="calculateTimeElapsed()">Calculate</button>
+
+  <p id="result"></p>
+
+  <script>
+    function handleStartCheckboxChange() {
+      const startDateTimeInput = document.getElementById('startDateTime');
+      const useSystemStartCheckbox = document.getElementById('useSystemStart');
+
+      if (useSystemStartCheckbox.checked) {
+        const now = new Date();
+        const timezoneOffset = now.getTimezoneOffset() * 60000;
+        const localDatetime = new Date(now.getTime() - timezoneOffset).toISOString().slice(0, 16);
+        startDateTimeInput.value = localDatetime;
+      }
+    }
+
+    function handleEndCheckboxChange() {
+      const endDateTimeInput = document.getElementById('endDateTime');
+      const useSystemEndCheckbox = document.getElementById('useSystemEnd');
+
+      if (useSystemEndCheckbox.checked) {
+        const now = new Date();
+        const timezoneOffset = now.getTimezoneOffset() * 60000;
+        const localDatetime = new Date(now.getTime() - timezoneOffset).toISOString().slice(0, 16);
+        endDateTimeInput.value = localDatetime;
+      }
+    }
+
+    function calculateTimeElapsed() {
+      const startDateTimeInput = document.getElementById('startDateTime');
+      const endDateTimeInput = document.getElementById('endDateTime');
+      const resultElement = document.getElementById('result');
+
+      const startDateTime = new Date(startDateTimeInput.value);
+      const endDateTime = new Date(endDateTimeInput.value);
+
+      const timeDifference = endDateTime - startDateTime;
+
+      if (timeDifference < 0) {
+        resultElement.textContent = "Invalid input. End date and time should be after the start date and time.";
+        return;
+      }
+
+      const totalSeconds = Math.floor(timeDifference / 1000);
+      const days = Math.floor(totalSeconds / (24 * 60 * 60));
+      const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+      const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+      const seconds = totalSeconds % 60;
+
+      resultElement.textContent = `Time elapsed: ${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds.`;
+    }
+  </script>
+</body>
+</html>
+
+
